@@ -1,9 +1,11 @@
 package training.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import training.demo.domain.User;
 import training.demo.domain.message;
 import training.demo.repository.messageRepo;
 import java.util.Map;
@@ -28,8 +30,11 @@ public class MainController {
     }
 
     @PostMapping
-    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-        message messages = new message(text, tag);
+    public String add(
+            @AuthenticationPrincipal User author,
+            @RequestParam String text,
+            @RequestParam String tag, Map<String, Object> model) {
+        message messages = new message(text, tag, author);
         messageRepo.save(messages);
         model.put("messages", messages);
         return "redirect:/main";
