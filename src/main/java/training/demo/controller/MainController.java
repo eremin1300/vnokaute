@@ -1,4 +1,4 @@
-package training.demo;
+package training.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +14,17 @@ public class MainController {
     @Autowired
     private messageRepo messageRepo;
 
-    @GetMapping("/")
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
         Iterable<message> messages = messageRepo.findAll();
         model.put("messages", messages);
         return "main";
+    }
+    @GetMapping("/")
+    public String greeting(Map<String, Object> model) {
+
+        model.put("messages", "messages");
+        return "greeting";
     }
 
     @PostMapping
@@ -26,7 +32,7 @@ public class MainController {
         message messages = new message(text, tag);
         messageRepo.save(messages);
         model.put("messages", messages);
-        return "redirect:/";
+        return "redirect:/main";
     }
 
     @PostMapping ("filter")
